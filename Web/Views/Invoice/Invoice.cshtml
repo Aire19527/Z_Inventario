@@ -1,0 +1,606 @@
+﻿@model Domain.DTO.Invoice.ConfigInvoiceDto;
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<div class="card">
+    <div class="card-header ">
+        Detalle Factura
+        <a class="btn btn-warning float-end" asp-controller="Invoice" asp-action="Index">
+            <i class="fas fa-arrow-left"></i>
+            Volver
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <form id="formProduct">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label"># Factura</label>
+                        <input id="txtIdInvoice"
+                               placeholder="00000"
+                               readonly
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label">Fecha</label>
+                        <input id="txtFecha"
+                               readonly
+                               class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label" asp-for="Invoice.ClientName"></label>
+                        <input asp-for="Invoice.ClientName"
+                               placeholder="Nombre Cliente"
+                               class="form-control" />
+                        <span asp-validation-for="Invoice.ClientName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label" asp-for="Invoice.ClientLastName"></label>
+                        <input asp-for="Invoice.ClientLastName"
+                               class="form-control"
+                               placeholder="Nombre artículo" />
+                        <span asp-validation-for="Invoice.ClientLastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label" asp-for="Invoice.ClientDocument"></label>
+                        <input asp-for="Invoice.ClientDocument"
+                               class="form-control"
+                               placeholder="Dirección Cliente" />
+                        <span asp-validation-for="Invoice.ClientDocument" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label" asp-for="Invoice.ClientPhone"></label>
+                        <input asp-for="Invoice.ClientPhone"
+                               class="form-control"
+                               placeholder="Teléfono Cliente" />
+                        <span asp-validation-for="Invoice.ClientPhone" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label class="col-form-label" asp-for="Invoice.ClientAddress"></label>
+                        <input asp-for="Invoice.ClientAddress"
+                               class="form-control"
+                               placeholder="Dirección Cliente" />
+                        <span asp-validation-for="Invoice.ClientAddress" class="text-danger"></span>
+
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" id="btnSearch" class="btn btn-dark" onclick="modalSeacthProduct()">
+                            <i class="fas fa-search"></i>
+                            Buscar Producto
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" id="btnSave" class="btn btn-success" style="float: right;">
+                            <i class="far fa-save"></i>
+                            Grabar
+                        </button>
+                    </div>
+
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+</div>
+<br />
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-shopping-basket iconSpace"></i>  Carrito de Productos
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tblProductSelected" class="table " style="width:100% !important">
+                    <thead class="table-nova">
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyProductSelected">
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+
+            <div class="col-md-8 ">
+            </div>
+            <div class="col-md-4 ">
+                <table class="table" width="100%">
+                    <tr>
+                        <th> <h5>Sub Total</h5></th>
+                        <td>
+                            <strong>
+                                <label id="lbSubTotal" style="font-size:larger">$0.00</label>
+                            </strong></>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> <h5>Descuento</h5></th>
+                        <td>
+                            <strong>
+                                <label id="lbDiscount" style="font-size:larger">$0.00</label>
+                            </strong></>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> <h5>Iva</h5></th>
+                        <td>
+                            <strong>
+                                <label id="lbIva" style="font-size:larger">$0.00</label>
+                            </strong></>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> <h5>Total</h5></th>
+                        <td>
+                            <strong>
+                                <label id="lbTotal" style="font-size:larger">$0.00</label>
+                            </strong></>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*modla Productos*@
+<div class="modal fade" id="modalProduct" tabindex="1" role="dialog" aria-labelledby="modalClaseLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="idTituloModalProduct">Buscar Productos</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-md-8 form-group">
+                                <label for="recipient-name" class="col-form-label">Productos</label>
+                                <select class="form-control" id="cmbProducts" style="width: 100%;"></select>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="recipient-name" class="col-form-label">Cantidad</label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="txtCantidad"
+                                       placeholder="Cantidad"
+                                       required
+                                       onkeypress="return onlyNumber(event);">
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    <i class="fas fa-window-close"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-dark" onclick="insertProduct()">
+                    <i class="fas fa-shopping-cart"></i>
+                    Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+
+    <script type="text/javascript" charset="utf-8">
+
+        var listProducts = [];
+        var listProductSelected = [];
+        var model = JSON.parse('@Json.Serialize(@Model)');
+
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                $("form").submit(function (e) {
+                    e.preventDefault();
+                });
+                saveSale();
+            });
+
+
+            let date = new Date().toLocaleDateString('es-CO')
+            $("#txtFecha").val(date);
+         
+            fillDataTable('tblProductSelected');
+
+
+            let idInvoiceParams = getParameterByName('idInvoice');
+            if (idInvoiceParams != '') {
+                hiddenButton(true);
+                disabledText(true);
+                GetInvoiceById(idInvoiceParams);
+
+                console.log("tiene parametro");
+            } else {
+                GetAllProducts();
+                hiddenButton(false);
+                disabledText(false);
+                console.log("No parametro");
+            }
+
+            console.log(idInvoiceParams);
+        });
+
+        function GetInvoiceById(idInvoice) {
+            modalProcessing(true, 'Cargando Facturas');
+            $.ajax({
+                url: '@Url.Action("GetInvoice", "Invoice")',
+                method: 'GET',
+                data: {
+                    idInvoice: idInvoice
+                },
+                dataType: "json",
+                success: function (data) {
+                    modalProcessing(false);
+                    if (data.isSuccess) {
+                        console.log(data.result);
+                        fillInvoice(data.result);
+                    } else {
+                        Swal.fire(
+                            'Opps!',
+                            data.message,
+                            'error');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    modalProcessing(false);
+                    console.error(xhr, textStatus, errorThrown);
+                    swaMessage(xhr.status, xhr.responseJSON.message);
+                }
+            });
+        }
+
+        function fillInvoice(invoice) {
+            $("#Invoice_ClientName").val(invoice.clientName);
+            $("#Invoice_ClientLastName").val(invoice.clientLastName);
+            $("#Invoice_ClientDocument").val(invoice.clientDocument);
+            $("#Invoice_ClientPhone").val(invoice.clientPhone);
+            $("#Invoice_ClientAddress").val(invoice.clientAddress);
+            $("#txtIdInvoice").val(invoice.idInvoice);
+            $("#txtFecha").val(invoice.strCreationDate);
+
+
+            invoice.invoiceDetails.forEach(product => {
+                var productSelected = {
+                    code: product.code,
+                    productName: product.productName,
+                    price: product.salePrice,
+                    id: product.idProduct,
+                    count: product.count,
+                    total: (Number(product.count) * Number(product.salePrice))
+                };
+                listProductSelected.push(productSelected);
+            });
+            loadGrid(listProductSelected);
+
+            disabledButtonDelete();
+            calculatePrice();
+        }
+
+        function GetAllProducts() {
+            modalProcessing(true, 'Cargando Facturas');
+            $.ajax({
+                url: '@Url.Action("GetAllProducts", "Product")',
+                method: 'GET',
+                dataType: "json",
+                success: function (data) {
+                    modalProcessing(false);
+                    if (data.isSuccess) {
+                        listProducts = data.result;
+                    } else {
+                        Swal.fire(
+                            'Opps!',
+                            data.message,
+                            'error');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    modalProcessing(false);
+                    console.error(xhr, textStatus, errorThrown);
+                    swaMessage(xhr.status, xhr.responseJSON.message);
+                }
+            });
+        }
+
+        function loadGrid(data) {
+            //llenar registro
+            if ($.fn.dataTable.isDataTable('#tblProductSelected')) {
+                var table = $('#tblProductSelected').DataTable();
+                table.destroy();
+                loadGridProduct(data);
+                fillDataTable('tblProductSelected');
+            }
+            else {
+                loadGridProduct(data);
+                fillDataTable('tblProductSelected');
+            }
+        }
+
+        function loadGridProduct(data) {
+            $("#bodyProductSelected").html("");
+
+            for (var i = 0; i < data.length; i++) {
+                var tr = `
+                                    <tr>
+                                    <th>`+ data[i].code + `</th>
+                                    <th>`+ data[i].productName + `</th>
+                                    <th>$`+ formatNumberWith2Decimal(data[i].price) + `</th>
+                                    <th>`+ data[i].count + `</th>
+                                    <th>$`+ formatNumberWith2Decimal(data[i].total) + `</th>
+
+                                    <td>
+                                         <button class="btn btn-danger" id="idOptionDelete_`+ data[i].id + `" onclick="deleteProduct(` + data[i].id + `)"><i class="fas fa-trash-alt iconSpace"></i> Eliminar</button>
+                                    </td>
+                                    </tr>
+                                                                                                                                                                                                                                      `;
+                $("#bodyProductSelected").append(tr);
+            }
+        }
+
+        function modalSeacthProduct() {
+            var list = transformDataSelect2Product(listProducts);
+
+            $('#cmbProducts').select2({
+                width: 'resolve',
+                placeholder: {
+                    id: '-1', // the value of the option
+                    text: 'Buscar un Producto'
+                },
+                dropdownParent: $('#modalProduct'),
+                data: list
+            });
+            $('#cmbProducts').val(null).trigger('change');
+
+            const modal = new bootstrap.Modal('#modalProduct', {
+                keyboard: true
+            });
+            modal.show();
+        }
+
+        function transformDataSelect2Product(dataProduct) {
+            //let id = 1;
+            return dataProduct.map(function (product) {
+                let data = {
+                    id: product.id,
+                    text: 'Codigo: ' + product.code + ' [' + product.productName + ' $' + formatNumberWith2Decimal(product.price) + ' ] ',
+                };
+                return data;
+            });
+        }
+
+        function insertProduct() {
+            if (validateFormProdudct()) {
+                var combo = document.getElementById("cmbProducts");
+                var selectIdProduct = combo.options[combo.selectedIndex].value;
+
+                var product = listProducts.find(x => x.id == selectIdProduct);
+                let count = $("#txtCantidad").val();
+
+                if (count > product.count) {
+                    toastMessage('warning', 'La cantidad es mayor a los productos en stock [' + product.count + '].');
+                    return;
+                }
+
+                //busco si ya existe el producto en la lista de selección
+                var existProduct = listProductSelected.find(x => x.id == selectIdProduct);
+                if (existProduct != undefined && existProduct != null) {
+                    //elimino de la lista el producto existente
+                    listProductSelected = listProductSelected.filter(x => x.id != selectIdProduct);
+
+                    existProduct.count = (Number(existProduct.count) + Number(count));
+                    existProduct.total = (Number(existProduct.count) * Number(product.price));
+
+                    //agrego el producto
+                    listProductSelected.push(existProduct);
+                } else {
+                    var productSelected = {
+                        code: product.code,
+                        productName: product.productName,
+                        price: product.price,
+                        id: product.id,
+                        count: count,
+                        total: (Number(count) * Number(product.price))
+                    };
+
+                    listProductSelected.push(productSelected);
+                }
+                //actualizo el stock de productos.
+                listProducts = listProducts.filter(x => x.id != selectIdProduct);
+                product.count = (Number(product.count) - count);
+                listProducts.push(product);
+
+                loadGrid(listProductSelected);
+                $('#modalProduct').modal('toggle');
+                toastMessage('success', 'Producto agregado exitosamente.');
+                $("#txtCantidad").val('');
+
+                calculatePrice();
+            }
+        }
+
+        function validateFormProdudct() {
+            var combo = document.getElementById("cmbProducts");
+            if (combo.selectedIndex == -1) {
+                $("#cmbProducts").focus();
+                toastMessage('warning', 'Debe seleccionar un producto.');
+
+                return false;
+            }
+            let count = $("#txtCantidad").val();
+            if (count == '' || count == 0) {
+                $("#txtCantidad").focus();
+                toastMessage('warning', 'Debe digitar una cantidad mayor a 0');
+
+                return false;
+            }
+
+            return true;
+        }
+
+        function deleteProduct(id) {
+            var product = listProducts.find(x => x.id == id);
+            var productSelected = listProductSelected.find(x => x.id == id);
+            product.count = (Number(product.count) + productSelected.count);
+
+            //actualizo el stock de productos.
+            listProducts = listProducts.filter(x => x.id != id);
+            listProducts.push(product);
+
+            //elimino el producto seleccionado
+            listProductSelected = listProductSelected.filter(x => x.id != id);
+            loadGrid(listProductSelected);
+            toastMessage('success', 'Producto Elimnado del carrito.');
+            $("#txtCantidad").val('');
+            calculatePrice();
+        }
+
+        function calculatePrice() {
+            let totalSum = 0;
+            listProductSelected.forEach(product => {
+                totalSum += product.total;
+            })
+
+            let discount = 0;
+            if (totalSum > model.conditionalDiscount) {
+                discount = (totalSum * model.discountRate) / 100;
+            }
+
+            let iva = ((totalSum - discount) * model.iva) / 100;
+            let total = (totalSum - discount) + iva;
+
+            // document.getElementById("lbSubTotal").innerHTML(totalSum);
+            $('#lbSubTotal').html('$ ' + formatNumberWith2Decimal(totalSum));
+            $('#lbDiscount').html('$ ' + formatNumberWith2Decimal(discount));
+            $('#lbIva').html('$ ' + formatNumberWith2Decimal(iva));
+            $('#lbTotal').html('$ ' + formatNumberWith2Decimal(total));
+        }
+
+        function saveSale() {
+            if (!$("#formProduct").valid()) {
+                console.log("no es válido");
+                return;
+            }
+
+            if (listProductSelected == 0) {
+                toastMessage("warning", "Debes seleccionar al menos un producto.");
+
+                return;
+            }
+
+            var listSelected = [];
+            listProductSelected.forEach(x => {
+                product = {
+                    idProduct: x.id,
+                    count: x.count,
+                    salePrice: x.price
+                };
+                listSelected.push(product);
+            });
+
+            var params = {
+                ClientName: $("#Invoice_ClientName").val(),
+                ClientLastName: $("#Invoice_ClientLastName").val(),
+                ClientDocument: $("#Invoice_ClientDocument").val(),
+                ClientPhone: $("#Invoice_ClientPhone").val(),
+                ClientAddress: $("#Invoice_ClientAddress").val(),
+                InvoiceDetails: listSelected
+            };
+
+            console.log(params);
+            modalProcessing(true);
+            $.ajax({
+                url: '@Url.Action("InserInvoice", "Invoice")',
+                method: 'POST',
+                data: params,
+                dataType: "json",
+                success: function (data) {
+                    modalProcessing(false);
+                    console.log(data);
+                    if (data.isSuccess) {
+                        $("#txtIdInvoice").val(data.result);
+
+                        hiddenButton(true);
+                   disabledButtonDelete();
+
+                        Swal.fire(
+                            'Que bien!',
+                            data.message,
+                            'success');
+
+                    } else {
+                        Swal.fire(
+                            'Opps!',
+                            data.message,
+                            'error');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    modalProcessing(false);
+                    console.error(xhr, textStatus, errorThrown);
+                }
+            });
+        }
+
+
+        function hiddenButton(hidden) {
+            $("#btnSave").prop('hidden', hidden);
+            $("#btnSearch").prop('hidden', hidden);
+        }
+
+        function disabledText(disable) {
+            $("#Invoice_ClientName").prop('disabled', disable);
+            $("#Invoice_ClientLastName").prop('disabled', disable);
+            $("#Invoice_ClientDocument").prop('disabled', disable);
+            $("#Invoice_ClientPhone").prop('disabled', disable);
+            $("#Invoice_ClientAddress").prop('disabled', disable);
+        }
+
+        function disabledButtonDelete(){
+            listProductSelected.forEach(product => {
+                $("#idOptionDelete_" + product.id).attr("disabled", true);
+            });
+        }
+    </script>
+
+}
