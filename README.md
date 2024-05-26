@@ -1,7 +1,7 @@
 # Z-Inventario
 Proyecto de Integración Continua - Sistema de Inventarios
 
-Este proyecto consiste en un sistema de facturación desarrollado en .NET 6 utilizando C# y sigue una arquitectura MVC con una implementación de microservicios. El sistema gestiona información relacionada con facturas, productos, inventarios, clientes y cálculos de valores de productos con descuentos.
+Este proyecto consiste en un sistema de inventario desarrollado en .NET 6 utilizando C# y sigue una arquitectura MVC con una implementación de microservicios. El sistema gestiona información relacionada con facturas, productos, inventarios, clientes y cálculos de valores de productos con descuentos.
 
 #Arquitectura
 
