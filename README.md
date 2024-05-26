@@ -11,7 +11,7 @@ Tecnologías Utilizadas
 Lenguaje de Programación: C# (.NET 6)
 Base de Datos: SQL Server
 
-Funcionalidades Principales
+#Funcionalidades Principales
 
 El sistema ofrece las siguientes funcionalidades principales:
 
@@ -20,17 +20,20 @@ Gestión de Productos e Inventario: Actualiza automáticamente los inventarios s
 Gestión de Clientes: Almacena y gestiona la información de los clientes.
 Cálculo de Valores con Descuentos: Realiza cálculos automáticos de valores de productos considerando los descuentos aplicados.
 
-Instalación y Configuración
+#Instalación y Configuración
+
 Para ejecutar el proyecto localmente, sigue estos pasos:
 
 Clona el repositorio en tu máquina local.
 Abre la solución en Visual Studio o tu IDE preferido.
 Configura la conexión a la base de datos SQL Server en el archivo de configuración correspondiente.
 Compila la solución y ejecuta el proyecto.
-Contribuciones
+
+#Contribuciones
+
 ¡Las contribuciones son bienvenidas! Si deseas contribuir al proyecto, por favor sigue estos pasos:
 
-Crea un fork del repositorio.
+#Crea un fork del repositorio.
 Realiza tus cambios en una nueva rama.
 Envía un pull request con una descripción clara de tus cambios.
 Contacto
