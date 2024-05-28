@@ -22,6 +22,12 @@ DependencyInyectionHandler.DependencyInyectionConfig(builder.Services);
 //#if DEBUG
 //builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 //#endif
+// Load configuration
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
 var app = builder.Build();
 
@@ -43,5 +49,14 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//var configurationBuilder = new ConfigurationBuilder();
+
+//configurationBuilder.AddJsonFile("appsettings.json");
+//#if DEBUG
+//configurationBuilder.AddJsonFile("appsettings.debug.json");
+//#elif RELEASE
+//configurationBuilder.AddJsonFile("appsettings.azure.json");
+//#endif
 
 app.Run();
