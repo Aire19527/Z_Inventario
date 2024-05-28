@@ -42,8 +42,11 @@ Para cualquier pregunta o sugerencia, no dudes en ponerte en contacto con nosotr
 #Pasos Comandos Docker Windows 
 
 ##1)Iniciar contenedor e imagen sql server
+
 **docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssW0rd2024" -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server:2022-latest**
+
 >El parametro **SA_PASSWORD** configura la constraseña para el usuario **SA** de la instancia de bases de datos sql server
+
 > **--name** es el parametro correspondiente al nombre del contenedor del motor sql server
 
 ##2)En el proyecto **3.Infraestructure/Infraestructure.Core** ejecutar la actualizacion de la base de datos dentro de la consola de administrador de paquetes de visual studio con el siguiente comando:
