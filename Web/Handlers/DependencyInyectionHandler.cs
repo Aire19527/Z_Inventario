@@ -1,5 +1,6 @@
 ﻿using Domain.Services;
 using Domain.Services.Interfaces;
+using Infraestructure.Core.Data;
 using Infraestructure.Core.Repository;
 using Infraestructure.Core.Repository.Interface;
 using Infraestructure.Core.UnitOfWork;
@@ -14,7 +15,7 @@ namespace Web.Handlers
             //Repository await UnitofWork parameter ctor explicit
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
+            services.AddScoped<SeedDb>();
 
 
             //Domain

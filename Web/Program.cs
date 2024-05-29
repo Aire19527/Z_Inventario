@@ -31,6 +31,15 @@ builder.Configuration
 
 var app = builder.Build();
 
+#region RunSeeding
+var scopeFactory = app.Services.GetService<IServiceScopeFactory>();
+using (var scope = scopeFactory.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetService<SeedDb>();
+    seeder!.ExecSeedAsync().Wait();
+}
+#endregion
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
